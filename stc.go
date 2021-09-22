@@ -156,10 +156,15 @@ func main() {
 	}
 
 	if *gPtr {
+		xMax := 70
+		xFactor := float64(lines) / float64(xMax)
+		for i := 0; i < len(allNumbers); i++ {
+			allNumbers[i].index = allNumbers[i].index / int64(xFactor)
+		}
+		fmt.Println(allNumbers)
+
 		yMax := 20
 		yFactor := max / float64(yMax)
-		xMax := 70
-		//xFactor := float64(lines) / float64(xMax)
 		yNum := max
 		for y := 0; y < yMax+1; y++ {
 			if y == yMax {
