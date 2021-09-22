@@ -144,7 +144,25 @@ func main() {
 	}
 
 	if *gPtr {
-		fmt.Fprintf(os.Stderr, "graphing coming soon\n")
+		yMax := 20
+		yFactor := max / float64(yMax)
+		xMax := 70
+		//xFactor := float64(lines) / float64(xMax)
+		yCurr := max
+		for y := 0; y < yMax+1; y++ {
+			if y == yMax {
+				yCurr = 0
+			}
+			fmt.Printf("%.2e |", yCurr)
+			if y == yMax {
+				for x := 0; x < xMax; x++ {
+					fmt.Printf("_")
+				}
+			} else {
+				yCurr -= yFactor
+			}
+			fmt.Printf("\n")
+		}
 	}
 
 	if *aPtr {
