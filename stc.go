@@ -96,6 +96,28 @@ func main() {
 	var variance float64 = 0.0
 	modeCount := 0
 
+	if *gPtr {
+		yMax := 20
+		yFactor := max / float64(yMax)
+		xMax := 70
+		//xFactor := float64(lines) / float64(xMax)
+		yNum := max
+		for y := 0; y < yMax+1; y++ {
+			if y == yMax {
+				yNum = 0
+			}
+			fmt.Printf("%.2e |", yNum)
+			if y == yMax {
+				for x := 0; x < xMax; x++ {
+					fmt.Printf("_")
+				}
+			} else {
+				yNum -= yFactor
+			}
+			fmt.Printf("\n")
+		}
+	}
+
 	if saveData {
 		sort.Float64s(allNumbers)
 		allNumbersLen := len(allNumbers)
@@ -140,28 +162,6 @@ func main() {
 				prevNum = x
 				currentCount = 1
 			}
-		}
-	}
-
-	if *gPtr {
-		yMax := 20
-		yFactor := max / float64(yMax)
-		xMax := 70
-		//xFactor := float64(lines) / float64(xMax)
-		yCurr := max
-		for y := 0; y < yMax+1; y++ {
-			if y == yMax {
-				yCurr = 0
-			}
-			fmt.Printf("%.2e |", yCurr)
-			if y == yMax {
-				for x := 0; x < xMax; x++ {
-					fmt.Printf("_")
-				}
-			} else {
-				yCurr -= yFactor
-			}
-			fmt.Printf("\n")
 		}
 	}
 
