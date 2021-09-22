@@ -18,6 +18,10 @@ type NumberAndIndex struct {
 	index int64
 }
 
+type int64Set map[int64]struct{}
+
+var exists = struct{}{}
+
 func main() {
 	firstError := true
 	firstConversion := true
@@ -156,16 +160,52 @@ func main() {
 	}
 
 	if *gPtr {
+
+		// TODO: don't waste time on reversing the array, just use indexing
+		// from the back later
+		for i, j := 0, len(allNumbers)-1; i < j; i, j = i+1, j-1 {
+			allNumbers[i], allNumbers[j] = allNumbers[j], allNumbers[i]
+		}
+
 		xMax := 70
 		xFactor := float64(lines) / float64(xMax)
 		for i := 0; i < len(allNumbers); i++ {
-			allNumbers[i].index = allNumbers[i].index / int64(xFactor)
+			allNumbers[i].index = int64(float64(allNumbers[i].index) / xFactor)
 		}
 
 		yMax := 20
 		yFactor := max / float64(yMax)
 		yNum := max
+		firstIdx := 0
 		for y := 0; y < yMax+1; y++ {
+
+			// Now that allNumbers is sorted by the y value, we will now find
+			// each section of this array that is in the range of the current
+			// row. Once we have found the index of the last number in this
+			// row, We will add the index to the rows
+
+			indexSet := make(int64Set)
+			lowestInRow := yNum
+			var lastIdx = 0
+			for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
+				num := allNumbers[lastIdx].num
+				if num < lowestInRow {
+					//fmt.Printf("num: %f lowestInRow: %f lastIdx: %d firstIdx: %d\n", num, lowestInRow, lastIdx, firstIdx)
+					for i := firstIdx; i < lastIdx; i++ {
+						idx := allNumbers[i].index
+						indexSet[idx] = exists
+					}
+					firstIdx = lastIdx
+					break
+				}
+			}
+			//if firstIdx < lastIdx {
+			//	indexSet[0] = exists
+			//	firstIdx++
+			//}
+			//fmt.Println(indexSet)
+
+			// draw the graph
 			if y == yMax {
 				yNum = 0
 			}
@@ -175,6 +215,16 @@ func main() {
 					fmt.Printf("_")
 				}
 			} else {
+				// Loop through indices set and only add a point if it is
+				// in the set
+				for i := 0; i < xMax+1; i++ {
+					idx := int64(i)
+					if _, ok := indexSet[idx]; ok {
+						fmt.Printf("*")
+					} else {
+						fmt.Printf(" ")
+					}
+				}
 				yNum -= yFactor
 			}
 			fmt.Printf("\n")
