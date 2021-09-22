@@ -167,7 +167,7 @@ func main() {
 			allNumbers[i], allNumbers[j] = allNumbers[j], allNumbers[i]
 		}
 
-		xMax := 70
+		xMax := 69
 		xFactor := float64(lines) / float64(xMax)
 		for i := 0; i < len(allNumbers); i++ {
 			allNumbers[i].index = int64(float64(allNumbers[i].index) / xFactor)
@@ -177,6 +177,7 @@ func main() {
 		yFactor := (max - min) / float64(yMax)
 		yNum := max
 		firstIdx := 0
+		fmt.Println(allNumbers)
 		for y := 0; y < yMax+1; y++ {
 			// Now that allNumbers is sorted by the y value, we will now find
 			// each section of this array that is in the range of the current
@@ -196,8 +197,8 @@ func main() {
 			var lastIdx = 0
 			for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
 				num := allNumbers[lastIdx].num
+				//fmt.Printf("num: %f lowestInRow: %f lastIdx: %d firstIdx: %d\n", num, lowestInRow, lastIdx, firstIdx)
 				if num < lowestInRow {
-					//fmt.Printf("num: %f lowestInRow: %f lastIdx: %d firstIdx: %d\n", num, lowestInRow, lastIdx, firstIdx)
 					for i := firstIdx; i < lastIdx; i++ {
 						idx := allNumbers[i].index
 						indexSet[idx] = exists
@@ -207,6 +208,10 @@ func main() {
 				}
 			}
 
+			if y == yMax {
+				lastItem := allNumbers[len(allNumbers)-1]
+				indexSet[lastItem.index] = exists
+			}
 			if yNum >= 0 {
 				fmt.Printf(" %.2e |", yNum)
 			} else {
