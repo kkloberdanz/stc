@@ -13,17 +13,22 @@ import (
 	"strings"
 )
 
+type NumberAndIndex struct {
+	num   float64
+	index int64
+}
+
 func main() {
 	firstError := true
 	firstConversion := true
 
 	reader := bufio.NewReader(os.Stdin)
-	lines := 0
+	var lines int64 = 0
 	sum := 0.0
 	max := 0.0
 	min := 0.0
 
-	var allNumbers []float64
+	var allNumbers []NumberAndIndex
 
 	aPtr := flag.Bool(
 		"a",
@@ -72,7 +77,11 @@ func main() {
 		min = math.Min(min, asF64)
 
 		if saveData {
-			allNumbers = append(allNumbers, asF64)
+			num := NumberAndIndex{
+				num:   asF64,
+				index: lines,
+			}
+			allNumbers = append(allNumbers, num)
 		}
 	}
 
@@ -96,6 +105,56 @@ func main() {
 	var variance float64 = 0.0
 	modeCount := 0
 
+	if saveData {
+		sort.Slice(allNumbers, func(i, j int) bool {
+			return allNumbers[i].num < allNumbers[j].num
+		})
+		allNumbersLen := len(allNumbers)
+		if allNumbersLen%2 == 0 {
+			a := allNumbers[(allNumbersLen/2)-1].num
+			b := allNumbers[allNumbersLen/2].num
+			median = (a + b) / 2
+		} else {
+			median = allNumbers[allNumbersLen/2].num
+		}
+
+		floatAllNumbersLen := float64(allNumbersLen)
+		pct1 = allNumbers[int64(floatAllNumbersLen*0.01)].num
+		pct5 = allNumbers[int64(floatAllNumbersLen*0.05)].num
+		pct10 = allNumbers[int64(floatAllNumbersLen*0.1)].num
+		pct25 = allNumbers[int64(floatAllNumbersLen*0.25)].num
+		pct75 = allNumbers[int64(floatAllNumbersLen*0.75)].num
+		pct95 = allNumbers[int64(floatAllNumbersLen*0.95)].num
+		pct99 = allNumbers[int64(floatAllNumbersLen*0.99)].num
+		pct99_9 = allNumbers[int64(floatAllNumbersLen*0.999)].num
+
+		currentCount := 0
+		prevNum := 0.0
+		candidateMode := 0.0
+		nInv := 1.0 / float64(lines)
+		for i, item := range allNumbers {
+			x := item.num
+			difference := x - mean
+			variance += nInv * difference * difference
+
+			if i == 0 {
+				candidateMode = x
+				prevNum = x
+				currentCount++
+			} else if x == prevNum {
+				candidateMode = x
+				currentCount++
+			} else {
+				if currentCount > modeCount {
+					mode = candidateMode
+					modeCount = currentCount
+				}
+				prevNum = x
+				currentCount = 1
+			}
+		}
+	}
+
 	if *gPtr {
 		yMax := 20
 		yFactor := max / float64(yMax)
@@ -115,53 +174,6 @@ func main() {
 				yNum -= yFactor
 			}
 			fmt.Printf("\n")
-		}
-	}
-
-	if saveData {
-		sort.Float64s(allNumbers)
-		allNumbersLen := len(allNumbers)
-		if allNumbersLen%2 == 0 {
-			a := allNumbers[(allNumbersLen/2)-1]
-			b := allNumbers[allNumbersLen/2]
-			median = (a + b) / 2
-		} else {
-			median = allNumbers[allNumbersLen/2]
-		}
-
-		floatAllNumbersLen := float64(allNumbersLen)
-		pct1 = allNumbers[int64(floatAllNumbersLen*0.01)]
-		pct5 = allNumbers[int64(floatAllNumbersLen*0.05)]
-		pct10 = allNumbers[int64(floatAllNumbersLen*0.1)]
-		pct25 = allNumbers[int64(floatAllNumbersLen*0.25)]
-		pct75 = allNumbers[int64(floatAllNumbersLen*0.75)]
-		pct95 = allNumbers[int64(floatAllNumbersLen*0.95)]
-		pct99 = allNumbers[int64(floatAllNumbersLen*0.99)]
-		pct99_9 = allNumbers[int64(floatAllNumbersLen*0.999)]
-
-		currentCount := 0
-		prevNum := 0.0
-		candidateMode := 0.0
-		nInv := 1.0 / float64(lines)
-		for i, x := range allNumbers {
-			difference := x - mean
-			variance += nInv * difference * difference
-
-			if i == 0 {
-				candidateMode = x
-				prevNum = x
-				currentCount++
-			} else if x == prevNum {
-				candidateMode = x
-				currentCount++
-			} else {
-				if currentCount > modeCount {
-					mode = candidateMode
-					modeCount = currentCount
-				}
-				prevNum = x
-				currentCount = 1
-			}
 		}
 	}
 
