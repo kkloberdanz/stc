@@ -197,7 +197,6 @@ func main() {
 			var lastIdx = 0
 			for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
 				num := allNumbers[lastIdx].num
-				//fmt.Printf("num: %f lowestInRow: %f lastIdx: %d firstIdx: %d\n", num, lowestInRow, lastIdx, firstIdx)
 				if num < lowestInRow {
 					for i := firstIdx; i < lastIdx; i++ {
 						idx := allNumbers[i].index
