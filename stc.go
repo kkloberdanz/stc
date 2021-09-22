@@ -30,7 +30,15 @@ func main() {
 		false,
 		"enables statistics that require memory allocation",
 	)
+
+	gPtr := flag.Bool(
+		"g",
+		false,
+		"graph the data in the terminal",
+	)
 	flag.Parse()
+
+	var saveData = *aPtr || *gPtr
 
 	for {
 		text, err := reader.ReadString('\n')
@@ -63,7 +71,7 @@ func main() {
 		max = math.Max(max, asF64)
 		min = math.Min(min, asF64)
 
-		if *aPtr {
+		if saveData {
 			allNumbers = append(allNumbers, asF64)
 		}
 	}
@@ -88,7 +96,7 @@ func main() {
 	var variance float64 = 0.0
 	modeCount := 0
 
-	if *aPtr {
+	if saveData {
 		sort.Float64s(allNumbers)
 		allNumbersLen := len(allNumbers)
 		if allNumbersLen%2 == 0 {
@@ -133,6 +141,10 @@ func main() {
 				currentCount = 1
 			}
 		}
+	}
+
+	if *gPtr {
+		fmt.Fprintf(os.Stderr, "graphing coming soon\n")
 	}
 
 	if *aPtr {
