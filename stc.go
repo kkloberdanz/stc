@@ -174,11 +174,10 @@ func main() {
 		}
 
 		yMax := 20
-		yFactor := max / float64(yMax)
+		yFactor := (max - min) / float64(yMax)
 		yNum := max
 		firstIdx := 0
 		for y := 0; y < yMax+1; y++ {
-
 			// Now that allNumbers is sorted by the y value, we will now find
 			// each section of this array that is in the range of the current
 			// row. Once we have found the index of the last number in this
@@ -206,9 +205,6 @@ func main() {
 			//fmt.Println(indexSet)
 
 			// draw the graph
-			if y == yMax {
-				yNum = 0
-			}
 			fmt.Printf("%.2e |", yNum)
 			if y == yMax {
 				for x := 0; x < xMax; x++ {
