@@ -161,7 +161,6 @@ func main() {
 		for i := 0; i < len(allNumbers); i++ {
 			allNumbers[i].index = allNumbers[i].index / int64(xFactor)
 		}
-		fmt.Println(allNumbers)
 
 		yMax := 20
 		yFactor := max / float64(yMax)
