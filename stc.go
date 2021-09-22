@@ -112,8 +112,10 @@ func main() {
 		currentCount := 0
 		prevNum := 0.0
 		candidateMode := 0.0
+		nInv := 1.0 / float64(lines)
 		for i, x := range allNumbers {
-			variance += (1.0 / float64(lines)) * (x - mean) * (x - mean)
+			difference := x - mean
+			variance += nInv * difference * difference
 
 			if i == 0 {
 				candidateMode = x
