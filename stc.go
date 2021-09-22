@@ -68,6 +68,11 @@ func main() {
 		}
 	}
 
+	if lines == 0 {
+		fmt.Fprintf(os.Stderr, "no lines in input\n")
+		os.Exit(1)
+	}
+
 	mean := sum / float64(lines)
 
 	var median float64 = 0.0
