@@ -184,6 +184,14 @@ func main() {
 			// row, We will add the index to the rows
 
 			indexSet := make(int64Set)
+			var spaceChar = " "
+			if yNum > 0 && yNum-yFactor < 0 {
+				spaceChar = "-"
+				yNum = 0
+			} else {
+				spaceChar = " "
+			}
+
 			lowestInRow := yNum
 			var lastIdx = 0
 			for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
@@ -198,31 +206,24 @@ func main() {
 					break
 				}
 			}
-			//if firstIdx < lastIdx {
-			//	indexSet[0] = exists
-			//	firstIdx++
-			//}
-			//fmt.Println(indexSet)
 
-			// draw the graph
-			fmt.Printf("%.2e |", yNum)
-			if y == yMax {
-				for x := 0; x < xMax; x++ {
-					fmt.Printf("_")
-				}
+			if yNum >= 0 {
+				fmt.Printf(" %.2e |", yNum)
 			} else {
-				// Loop through indices set and only add a point if it is
-				// in the set
-				for i := 0; i < xMax+1; i++ {
-					idx := int64(i)
-					if _, ok := indexSet[idx]; ok {
-						fmt.Printf("*")
-					} else {
-						fmt.Printf(" ")
-					}
-				}
-				yNum -= yFactor
+				fmt.Printf("%.2e |", yNum)
 			}
+
+			// Loop through indices set and only add a point if it is
+			// in the set
+			for i := 0; i < xMax+1; i++ {
+				idx := int64(i)
+				if _, ok := indexSet[idx]; ok {
+					fmt.Printf("*")
+				} else {
+					fmt.Printf(spaceChar)
+				}
+			}
+			yNum -= yFactor
 			fmt.Printf("\n")
 		}
 	}
