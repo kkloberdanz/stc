@@ -45,6 +45,9 @@ func main() {
 		false,
 		"graph the data in the terminal",
 	)
+	xDim := flag.Int("xdim", 68, "character length of x axis")
+	yDim := flag.Int("ydim", 20, "character length of y axis")
+
 	flag.Parse()
 
 	var saveData = *aPtr || *gPtr
@@ -167,17 +170,16 @@ func main() {
 			allNumbers[i], allNumbers[j] = allNumbers[j], allNumbers[i]
 		}
 
-		xMax := 69
+		xMax := *xDim
 		xFactor := float64(lines) / float64(xMax)
 		for i := 0; i < len(allNumbers); i++ {
 			allNumbers[i].index = int64(float64(allNumbers[i].index) / xFactor)
 		}
 
-		yMax := 20
+		yMax := *yDim
 		yFactor := (max - min) / float64(yMax)
 		yNum := max
 		firstIdx := 0
-		fmt.Println(allNumbers)
 		for y := 0; y < yMax+1; y++ {
 			// Now that allNumbers is sorted by the y value, we will now find
 			// each section of this array that is in the range of the current
