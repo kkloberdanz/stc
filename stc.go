@@ -116,6 +116,7 @@ func main() {
 		sort.Slice(allNumbers, func(i, j int) bool {
 			return allNumbers[i].num < allNumbers[j].num
 		})
+		mode = allNumbers[0].num
 		allNumbersLen := len(allNumbers)
 		if allNumbersLen%2 == 0 {
 			a := allNumbers[(allNumbersLen/2)-1].num
@@ -159,6 +160,9 @@ func main() {
 				prevNum = x
 				currentCount = 1
 			}
+		}
+		if modeCount == 0 {
+			modeCount = currentCount
 		}
 	}
 
