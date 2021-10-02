@@ -22,6 +22,82 @@ type int64Set map[int64]struct{}
 
 var exists = struct{}{}
 
+func drawGraph(
+	allNumbers []NumberAndIndex,
+	lines int64,
+	min float64,
+	max float64,
+	xMax int,
+	yMax int,
+) {
+	// TODO: don't waste time on reversing the array, just use indexing
+	// from the back later
+	for i, j := 0, len(allNumbers)-1; i < j; i, j = i+1, j-1 {
+		allNumbers[i], allNumbers[j] = allNumbers[j], allNumbers[i]
+	}
+
+	xFactor := float64(lines) / float64(xMax)
+	for i := 0; i < len(allNumbers); i++ {
+		allNumbers[i].index = int64(float64(allNumbers[i].index) / xFactor)
+	}
+
+	yFactor := (max - min) / float64(yMax)
+	yNum := max
+	firstIdx := 0
+	for y := 0; y < yMax+1; y++ {
+		// Now that allNumbers is sorted by the y value, we will now find
+		// each section of this array that is in the range of the current
+		// row. Once we have found the index of the last number in this
+		// row, We will add the index to the rows
+
+		indexSet := make(int64Set)
+		var spaceChar = " "
+		if yNum > 0 && yNum-yFactor < 0 {
+			spaceChar = "-"
+			yNum = 0
+		} else {
+			spaceChar = " "
+		}
+
+		lowestInRow := yNum
+		var lastIdx = 0
+		for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
+			num := allNumbers[lastIdx].num
+			if num < lowestInRow {
+				for i := firstIdx; i < lastIdx; i++ {
+					idx := allNumbers[i].index
+					indexSet[idx] = exists
+				}
+				firstIdx = lastIdx
+				break
+			}
+		}
+
+		if y == yMax {
+			lastItem := allNumbers[len(allNumbers)-1]
+			indexSet[lastItem.index] = exists
+		}
+		if yNum >= 0 {
+			fmt.Printf(" %.2e |", yNum)
+		} else {
+			fmt.Printf("%.2e |", yNum)
+		}
+
+		// Loop through indices set and only add a point if it is
+		// in the set
+		for i := 0; i < xMax+1; i++ {
+			idx := int64(i)
+			if _, ok := indexSet[idx]; ok {
+				fmt.Print("*")
+			} else {
+				fmt.Print(spaceChar)
+			}
+		}
+		yNum -= yFactor
+		fmt.Printf("\n")
+	}
+}
+
 func main() {
 	firstError := true
 	firstConversion := true
@@ -167,75 +243,7 @@ func main() {
 	}
 
 	if *gPtr {
-
-		// TODO: don't waste time on reversing the array, just use indexing
-		// from the back later
-		for i, j := 0, len(allNumbers)-1; i < j; i, j = i+1, j-1 {
-			allNumbers[i], allNumbers[j] = allNumbers[j], allNumbers[i]
-		}
-
-		xMax := *xDim
-		xFactor := float64(lines) / float64(xMax)
-		for i := 0; i < len(allNumbers); i++ {
-			allNumbers[i].index = int64(float64(allNumbers[i].index) / xFactor)
-		}
-
-		yMax := *yDim
-		yFactor := (max - min) / float64(yMax)
-		yNum := max
-		firstIdx := 0
-		for y := 0; y < yMax+1; y++ {
-			// Now that allNumbers is sorted by the y value, we will now find
-			// each section of this array that is in the range of the current
-			// row. Once we have found the index of the last number in this
-			// row, We will add the index to the rows
-
-			indexSet := make(int64Set)
-			var spaceChar = " "
-			if yNum > 0 && yNum-yFactor < 0 {
-				spaceChar = "-"
-				yNum = 0
-			} else {
-				spaceChar = " "
-			}
-
-			lowestInRow := yNum
-			var lastIdx = 0
-			for lastIdx = firstIdx; lastIdx < len(allNumbers); lastIdx++ {
-				num := allNumbers[lastIdx].num
-				if num < lowestInRow {
-					for i := firstIdx; i < lastIdx; i++ {
-						idx := allNumbers[i].index
-						indexSet[idx] = exists
-					}
-					firstIdx = lastIdx
-					break
-				}
-			}
-
-			if y == yMax {
-				lastItem := allNumbers[len(allNumbers)-1]
-				indexSet[lastItem.index] = exists
-			}
-			if yNum >= 0 {
-				fmt.Printf(" %.2e |", yNum)
-			} else {
-				fmt.Printf("%.2e |", yNum)
-			}
-
-			// Loop through indices set and only add a point if it is
-			// in the set
-			for i := 0; i < xMax+1; i++ {
-				idx := int64(i)
-				if _, ok := indexSet[idx]; ok {
-					fmt.Printf("*")
-				} else {
-					fmt.Printf(spaceChar)
-				}
-			}
-			yNum -= yFactor
-			fmt.Printf("\n")
-		}
+		drawGraph(allNumbers, lines, min, max, *xDim, *yDim)
 	}
 
 	if *aPtr {
