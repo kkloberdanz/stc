@@ -137,9 +137,9 @@ func main() {
 		text = strings.ReplaceAll(text, "\n", "")
 		asF64, err := strconv.ParseFloat(text, 64)
 		if err != nil {
-			msg := "failed to convert to a number, ignoring future warnings.\n"
+			msg := "failed to convert to a number, ignoring future warnings."
 			if firstError {
-				fmt.Fprintf(
+				fmt.Fprintln(
 					os.Stderr,
 					msg,
 				)
