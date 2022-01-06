@@ -4,21 +4,24 @@ Calculate basic statistics from a bash pipeline. By default it does not need
 to save any data, and therefore can handle arbitrarily sized streams of data.
 
 ```bash
-$ python3 -c "import math; print('\n'.join(str(math.sin(i / 150)) for i in range(3000)))" | stc
+$ python3 -c "import math; print('\n'.join(str(math.sin(i / 150)) for i in range(3000)))" \
+| stc
 lines: 3000 sum: 88.33088925908383 mean: 0.029443629753027944 max: 0.9999997898531467 min: -0.9999995540987874
 ```
 
 Optionally can make calculations that require all of the data in memory.
 
 ```bash
-$ python3 -c "import math; print('\n'.join(str(math.sin(i / 150)) for i in range(3000)))" | stc -a
+$ python3 -c "import math; print('\n'.join(str(math.sin(i / 150)) for i in range(3000)))" \
+| stc -a
 lines: 3000 sum: 88.33088925908383 mean: 0.029443629753027944 max: 0.9999997898531467 min: -0.9999995540987874 median: 0.08135461628130639 mode: (-0.9999995540987874 1x) variance: 0.4896803846401646 stddev: 0.6997716660741307 pct1: -0.9994125776314275 pct5: -0.9859861273616704 pct10: -0.9446475377265153 pct25: -0.6717129561636814 pct75: 0.7151332305593578 pct95: 0.9862505748896837 pct99: 0.9994658918709773 pct99.9: 0.999995986891472
 ```
 
 Graph data in the terminal.
 
 ```bash
-$ python3 -c "import math; print('\n'.join(str(math.sin(i / 100)) for i in range(3000)))" | stc -a -g -xdim=200 -ydim=40
+$ python3 -c "import math; print('\n'.join(str(math.sin(i / 100)) for i in range(3000)))" \
+| stc -a -g -xdim=200 -ydim=40
  1.00e+00 |                                                                                                                                        *
  9.50e-01 |        *****                                     *****                                     *****                                     *****                                     *****
  9.00e-01 |       **   **                                   **   **                                   **   **                                   **   **                                   *    **
