@@ -248,7 +248,7 @@ func main() {
 
 	if *aPtr {
 		fmt.Printf(
-			"lines: %d sum: %g mean: %g max: %g min: %g median: %g "+
+			"count: %d sum: %g mean: %g max: %g min: %g median: %g "+
 				"mode: (%g %dx) variance: %g stddev: %g "+
 				"pct1: %g pct5: %g pct10: %g pct25: %g pct75: %g pct95: %g "+
 				"pct99: %g pct99.9: %g\n",
