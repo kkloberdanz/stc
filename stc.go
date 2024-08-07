@@ -22,6 +22,8 @@ type int64Set map[int64]struct{}
 
 var exists = struct{}{}
 
+var graphString = "\033[91m*\033[0m"
+
 func drawGraph(
 	allNumbers []NumberAndIndex,
 	lines int64,
@@ -88,7 +90,7 @@ func drawGraph(
 		for i := 0; i < xMax+1; i++ {
 			idx := int64(i)
 			if _, ok := indexSet[idx]; ok {
-				fmt.Print("*")
+				fmt.Print(graphString)
 			} else {
 				fmt.Print(spaceChar)
 			}
@@ -124,7 +126,13 @@ func main() {
 	xDim := flag.Int("xdim", 68, "character length of x axis")
 	yDim := flag.Int("ydim", 20, "character length of y axis")
 
+	noColor := flag.Bool("nocolor", false, "don't use colors when graphing")
+
 	flag.Parse()
+
+	if *noColor {
+		graphString = "*"
+	}
 
 	var saveData = *aPtr || *gPtr
 
