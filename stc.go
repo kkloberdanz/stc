@@ -142,7 +142,7 @@ func main() {
 			break
 		}
 
-		text = strings.ReplaceAll(text, "\n", "")
+		text = strings.TrimSpace(text)
 		asF64, err := strconv.ParseFloat(text, 64)
 		if err != nil {
 			msg := "failed to convert to a number, ignoring future warnings."
